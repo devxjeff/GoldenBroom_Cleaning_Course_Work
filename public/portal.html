@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Customer Portal — Golden Broom</title><link rel="stylesheet" href="css/style.css"><script src="js/theme.js"></script></head><body>
+<header class="dash-nav"><nav class="inner" aria-label="Portal"><a class="logo" href="index.html">🧹 Golden Broom</a><div class="who"><a class="home-link" href="index.html">← Back to home</a><span id="who"></span><button class="theme-toggle" type="button"></button></div></nav></header>
+<main class="dash-body" style="max-width:680px"><p id="msg" class="note" role="status"></p>
+<section id="login" hidden class="card"><h2>Log In</h2>
+<form data-api="/api/login" data-next="dash"><label class="form-group"><span>Email</span><input name="email" type="email" required></label><label class="form-group"><span>Password</span><input name="password" type="password" required></label><button class="btn btn-gold" style="width:100%">Log In</button></form>
+<p style="margin-top:16px;font-size:14px">No account? <a href="#register" style="color:var(--gold)">Create one</a></p></section>
+<section id="register" hidden class="card"><h2>Create Account</h2>
+<form data-api="/api/register" data-next="login" data-ok="Account created. Please log in."><label class="form-group"><span>Full name</span><input name="full_name" required></label><label class="form-group"><span>Phone</span><input name="phone" type="tel" placeholder="0596613521" required></label><label class="form-group"><span>Email</span><input name="email" type="email" required></label><label class="form-group"><span>Password (8+ characters)</span><input name="password" type="password" minlength="8" required></label><button class="btn btn-gold" style="width:100%">Create Account</button></form>
+<p style="margin-top:16px;font-size:14px">Have an account? <a href="#login" style="color:var(--gold)">Log in</a></p></section>
+<section id="dash" hidden><header class="bar"><h2>My Bookings</h2><a href="#book" class="btn btn-gold btn-sm">+ New Booking</a></header><section id="list" aria-live="polite"></section></section>
+<section id="book" hidden class="card"><h2>New Booking</h2>
+<form data-api="/api/bookings" data-next="dash" data-ok="Booking submitted. We will contact you within 24 hours.">
+<label class="form-group"><span>Service</span><select name="service" required><option value="" disabled selected>Select a service</option><option>Regular Cleaning</option><option>Deep Cleaning</option><option>Move-in / Move-out Clean</option><option>Laundry &amp; Ironing</option><option>Outdoor &amp; Lawn Care</option><option>Pest Control</option><option>Multiple Services</option></select></label>
+<label class="form-group"><span>Location</span><input name="location" placeholder="e.g. New Juaben" required></label>
+<div class="form-row"><label class="form-group"><span>Bedrooms</span><select name="bedrooms"><option value="">Select</option><option>Single room</option><option>1 Bedroom</option><option>2 Bedrooms</option><option>3 Bedrooms</option><option>4+ Bedrooms</option><option>Office / Commercial</option></select></label>
+<label class="form-group"><span>Frequency</span><select name="frequency"><option value="">Select</option><option>One-time</option><option>Weekly</option><option>Bi-weekly</option><option>Monthly</option></select></label></div>
+<label class="form-group"><span>Preferred date</span><input name="date" type="date" required></label>
+<label class="form-group"><span>Notes</span><textarea name="message"></textarea></label><button class="btn btn-gold" style="width:100%">Submit Booking</button></form></section></main>
+<footer class="dash-foot"><p>© 2026 Golden Broom · <a href="index.html" style="color:var(--gold)">Back to site</a></p></footer>
+<script>
+const V=['login','register','dash','book'],$=s=>document.querySelector(s),today=()=>new Date().toISOString().slice(0,10);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const api=async(url,method='GET',body)=>{const r=await fetch(url,{method,headers:{'Content-Type':'application/json'},body:body&&JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Something went wrong');return d};
+const note=(t,ok)=>{const m=$('#msg');m.textContent=t||'';m.className='note '+(ok?'ok':'err')};
+const card=b=>`<article class="card" style="margin-bottom:12px"><header class="bar"><h3>${esc(b.service)}</h3><span class="badge badge-${esc(b.status.toLowerCase())}">${esc(b.status)}</span></header><p>📍 ${esc(b.location)} &nbsp; 📅 ${esc(b.date)}</p>`+
+ (['Pending','Confirmed'].includes(b.status)?`<footer class="actions"><details><summary class="btn btn-outline btn-sm">Reschedule</summary><form class="resched" data-id="${b.id}"><label class="form-group"><span>New date</span><input type="date" name="date" min="${today()}" required></label><button class="btn btn-gold btn-sm">Save new date</button></form></details><button class="btn-danger" data-cancel="${b.id}">Cancel booking</button></footer>`:'')+`</article>`;
+async function route(){const {role,name}=await api('/api/me'),ok=role==='user';let t=V.includes(location.hash.slice(1))?location.hash.slice(1):'login';
+ if(!ok&&(t==='dash'||t==='book'))t='login';if(ok&&(t==='login'||t==='register'))t='dash';
+ V.forEach(x=>$('#'+x).hidden=x!==t);
+ $('#who').innerHTML=ok?`Hello, <strong>${esc(name)}</strong> <button id="out" class="btn btn-outline btn-sm">Log out</button>`:'';
+ if(t==='dash'){const r=await api('/api/bookings');$('#list').innerHTML=r.length?r.map(card).join(''):'<p>No bookings yet.</p>'}
+ if(t==='book')$('#book [name=date]').min=today()}
+document.addEventListener('submit',async e=>{const f=e.target;if(!f.dataset.api)return;e.preventDefault();
+ try{await api(f.dataset.api,'POST',Object.fromEntries(new FormData(f)));f.reset();history.replaceState(null,'','#'+f.dataset.next);await route();note(f.dataset.ok,1)}catch(x){note(x.message)}});
+$('#list').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;
+ try{await api(`/api/bookings/${f.dataset.id}/reschedule`,'PATCH',Object.fromEntries(new FormData(f)));await route();note('Rescheduled. We will confirm the new date with you.',1)}catch(x){note(x.message)}});
+$('#list').addEventListener('click',async e=>{const id=e.target.dataset.cancel;if(!id||!confirm('Cancel this booking?'))return;
+ try{await api(`/api/bookings/${id}/cancel`,'PATCH');await route();note('Booking cancelled.',1)}catch(x){note(x.message)}});
+document.addEventListener('click',async e=>{if(e.target.id!=='out')return;await api('/api/logout','POST');history.replaceState(null,'','#login');route()});
+addEventListener('hashchange',()=>{note();route()});route();
+</script></body></html>

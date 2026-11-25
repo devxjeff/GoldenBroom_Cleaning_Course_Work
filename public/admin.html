@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin — Golden Broom</title><link rel="stylesheet" href="css/style.css"><script src="js/theme.js"></script></head><body>
+<header class="dash-nav"><nav class="inner" aria-label="Admin"><a class="logo" href="index.html">🧹 Golden Broom · Admin</a><div class="who"><a class="home-link" href="index.html">← Back to home</a><button id="out" hidden class="btn btn-outline btn-sm">Log out</button><button class="theme-toggle" type="button"></button></div></nav></header>
+<main class="dash-body"><p id="msg" class="note" role="status"></p>
+<section id="login" class="card" style="max-width:420px;margin:40px auto"><h2>Admin Login</h2><form id="lf"><label class="form-group"><span>Username</span><input name="username" required></label><label class="form-group"><span>Password</span><input name="password" type="password" required></label><button class="btn btn-gold" style="width:100%">Log In</button></form></section>
+<section id="panel" hidden><section id="stats" class="stats-row" aria-label="Summary"></section>
+<section aria-label="Bookings"><header class="bar"><h2>Bookings</h2><div class="filters"><label class="form-group"><span class="sr">Status</span><select id="f"><option value="">All statuses</option><option>Pending</option><option>Confirmed</option><option>Completed</option><option>Cancelled</option></select></label><label class="form-group"><span class="sr">Search</span><input id="q" placeholder="Search name, service, location"></label></div></header>
+<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>#</th><th>Customer</th><th>Service / Location</th><th>Date</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<section aria-label="Customers" style="margin-top:36px"><header class="bar"><h2>Customers</h2></header><div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Bookings</th></tr></thead><tbody id="cust"></tbody></table></div></section></section></main>
+<footer class="dash-foot"><p>© 2026 Golden Broom</p></footer>
+<script>
+const $=s=>document.querySelector(s),ST=['Pending','Confirmed','Completed','Cancelled'];let all=[];
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const api=async(url,method='GET',body)=>{const r=await fetch(url,{method,headers:{'Content-Type':'application/json'},body:body&&JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Something went wrong');return d};
+const note=(t,ok)=>{const m=$('#msg');m.textContent=t||'';m.className='note '+(ok?'ok':'err')};
+async function route(){const {role}=await api('/api/me'),ok=role==='admin';$('#login').hidden=ok;$('#panel').hidden=!ok;$('#out').hidden=!ok;if(ok)load()}
+async function load(){all=await api('/api/admin/bookings');const cu=await api('/api/admin/customers'),n=s=>all.filter(b=>b.status===s).length;
+ $('#stats').innerHTML=[['Total bookings',all.length],['Pending',n('Pending')],['Confirmed',n('Confirmed')],['Customers',cu.length]].map(([l,v])=>`<article class="stat-card"><p class="s-num">${v}</p><p class="s-label">${l}</p></article>`).join('');
+ $('#cust').innerHTML=cu.map(c=>`<tr><td><strong>${esc(c.full_name)}</strong></td><td>${esc(c.phone)}</td><td>${esc(c.email)}</td><td>${c.bookings}</td></tr>`).join('');draw()}
+function draw(){const st=$('#f').value,q=$('#q').value.toLowerCase();
+ $('#rows').innerHTML=all.filter(b=>(!st||b.status===st)&&(b.full_name+b.service+b.location).toLowerCase().includes(q)).map(b=>`<tr><td>${b.id}</td><td><strong>${esc(b.full_name)}</strong><br>${esc(b.phone)}</td><td>${esc(b.service)}<br>${esc(b.location)}</td><td>${esc(b.date)}</td><td><select data-id="${b.id}">${ST.map(s=>`<option${s===b.status?' selected':''}>${s}</option>`).join('')}</select></td></tr>`).join('')||'<tr><td colspan="5">No bookings found.</td></tr>'}
+$('#f').onchange=$('#q').oninput=draw;
+$('#rows').onchange=async e=>{const s=e.target;try{await api('/api/admin/bookings/'+s.dataset.id,'PATCH',{status:s.value});await load();note('Booking #'+s.dataset.id+' set to '+s.value,1)}catch(x){note(x.message)}};
+$('#lf').onsubmit=async e=>{e.preventDefault();try{await api('/api/admin/login','POST',Object.fromEntries(new FormData(e.target)));e.target.reset();note();route()}catch(x){note(x.message)}};
+$('#out').onclick=async()=>{await api('/api/logout','POST');route()};route();
+</script></body></html>

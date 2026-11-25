@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — Golden Broom</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .story-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .story-text .section-label { margin-bottom: 12px; }
+
+    .story-text p {
+      color: var(--grey);
+      line-height: 1.9;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .story-visual {
+      background: var(--black-card);
+      border: 1px solid rgba(212,168,67,0.2);
+      border-radius: 12px;
+      padding: 48px;
+      text-align: center;
+    }
+
+    .story-visual .big-icon {
+      font-size: 80px;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .story-visual blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--gold);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* Values */
+    .value-card {
+      background: var(--black-card);
+      border: 1px solid rgba(212,168,67,0.15);
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .value-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(212,168,67,0.1);
+    }
+
+    .value-card .icon {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .value-card h3 {
+      font-size: 18px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .value-card p {
+      font-size: 14px;
+      color: var(--grey);
+      line-height: 1.8;
+    }
+
+    /* Mission */
+    .mission-block {
+      background: linear-gradient(135deg, var(--green-dark), var(--black-soft));
+      border: 1px solid rgba(212,168,67,0.2);
+      border-radius: 12px;
+      padding: 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-block::before {
+      content: '🌿';
+      position: absolute;
+      font-size: 200px;
+      opacity: 0.05;
+      left: -40px;
+      bottom: -40px;
+    }
+
+    .mission-block h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+
+    .mission-block h2 span { color: var(--gold); }
+
+    .mission-block p {
+      font-size: 18px;
+      color: var(--grey);
+      max-width: 640px;
+      margin: 0 auto;
+      line-height: 1.9;
+    }
+
+    /* Who we serve */
+    .market-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: var(--black-card);
+      border: 1px solid rgba(212,168,67,0.1);
+      border-radius: 8px;
+      padding: 24px;
+      transition: border-color 0.3s;
+    }
+
+    .market-item:hover { border-color: rgba(212,168,67,0.4); }
+
+    .market-icon {
+      font-size: 28px;
+      min-width: 44px;
+    }
+
+    .market-item h4 {
+      font-size: 16px;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .market-item p {
+      font-size: 13px;
+      color: var(--grey);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 768px) {
+      .story-block { grid-template-columns: 1fr; gap: 40px; }
+      .mission-block { padding: 40px 24px; }
+    }
+  </style>
+<script src="js/theme.js"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar"><nav class="container" aria-label="Main">
+      <div class="nav-logo">
+        <span class="logo-icon">🧹</span>
+        <span class="logo-text">Golden Broom</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="portal.html#login" class="nav-cta">Login / Book</a></li>
+      </ul>
+      <button class="theme-toggle" type="button"></button>
+<button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav></header>
+
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="about.html" class="active">About Us</a>
+    <a href="contact.html">Contact</a>
+    <a href="portal.html#login">Login / Book</a>
+  </nav>
+<main>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header" style="background: linear-gradient(135deg, rgba(13,13,13,0.88) 0%, rgba(26,71,49,0.85) 100%), url('images/hero.png') center center / cover no-repeat;">
+    <p class="section-label">Our Story</p>
+    <h1>About <span>Golden Broom</span></h1>
+    <p>A Koforidua business built on trust, quality, and a commitment to greener homes.</p></header>
+
+  <!-- OUR STORY -->
+  <section class="section-soft">
+    <div class="container">
+      <div class="story-block">
+        <article class="story-text">
+          <p class="section-label">How We Started</p>
+          <h2 class="section-heading">Built Right Here in <span>Koforidua</span></h2>
+          <hr class="divider">
+          <p>Golden Broom was born from a simple observation: the families and professionals of Koforidua needed a home cleaning service they could actually trust — one that showed up on time, did the job properly, and used products that were safe for their children and their environment.</p>
+          <p>We started small, serving a handful of households in the Eastern Region. Every job was treated with the same care and attention — because we understood that when someone lets you into their home, they are placing real trust in you.</p>
+          <p>Today, Golden Broom offers a full range of cleaning and home services — from routine weekly cleans to deep sanitisation, laundry, lawn care, and pest control — all delivered by trained professionals with eco-friendly products.</p>
+          <a href="contact.html" class="btn btn-gold" style="margin-top:8px;">Book Your First Clean</a>
+        </article>
+        <aside class="story-visual" style="padding:0; overflow:hidden;">
+          <img src="images/team.png" alt="Golden Broom professional cleaning team" style="width:100%; height:300px; object-fit:cover; object-position:top; display:block; border-radius:12px 12px 0 0;" />
+          <div style="padding:32px 40px 40px; background:var(--black-card); border-radius:0 0 12px 12px; border:1px solid rgba(212,168,67,0.2); border-top:none;">
+            <blockquote>"A clean home is a healthy home — and a healthy home is a happy home."</blockquote>
+            <p style="color:var(--grey); font-size:13px; margin-top:16px;">— The Golden Broom Team</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section class="section-dark">
+    <div class="container">
+      <section class="mission-block">
+        <p class="section-label" style="text-align:center;">Our Mission</p>
+        <h2>Cleaning That <span>Cares</span></h2>
+        <p>To deliver reliable, affordable, and environmentally responsible cleaning services — using biodegradable products that are safe for your family, your pets, and the planet we all share.</p>
+      </section>
+    </div>
+  </section>
+
+  <!-- OUR VALUES -->
+  <section class="section-soft">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:48px;">
+        <p class="section-label">What Drives Us</p>
+        <h2 class="section-heading">Our Core <span>Values</span></h2>
+        <hr class="divider divider-center">
+      </div>
+      <div class="grid-3">
+        <article class="value-card">
+          <span class="icon">🌿</span>
+          <h3>Eco-Responsibility</h3>
+          <p>We use 100% biodegradable, non-toxic cleaning products on every job. Good for your home, good for the environment.</p>
+        </article>
+        <article class="value-card">
+          <span class="icon">🤝</span>
+          <h3>Trust & Integrity</h3>
+          <p>We enter your home with respect. Every team member is vetted and trained to uphold our standards of honesty and professionalism.</p>
+        </article>
+        <article class="value-card">
+          <span class="icon">💰</span>
+          <h3>Transparent Pricing</h3>
+          <p>No hidden charges. No last-minute additions. You agree to a price before we start — and that's exactly what you pay.</p>
+        </article>
+        <article class="value-card">
+          <span class="icon">⏰</span>
+          <h3>Reliability</h3>
+          <p>We show up when we say we will. Punctuality and consistency are non-negotiable at Golden Broom.</p>
+        </article>
+        <article class="value-card">
+          <span class="icon">🏆</span>
+          <h3>Quality Workmanship</h3>
+          <p>We don't just clean — we clean properly. Every corner, every surface, done to a standard we're proud of.</p>
+        </article>
+        <article class="value-card">
+          <span class="icon">❤️</span>
+          <h3>Community First</h3>
+          <p>We're a Koforidua business serving Koforidua people. Supporting local is in our DNA.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO WE SERVE -->
+  <section class="section-dark">
+    <div class="container">
+      <p class="section-label">Our Customers</p>
+      <h2 class="section-heading">Who We <span>Serve</span></h2>
+      <hr class="divider">
+      <div class="grid-2" style="margin-top:8px;">
+        <article class="market-item">
+          <div class="market-icon">👨‍👩‍👧‍👦</div>
+          <div>
+            <h4>Busy Households & Families</h4>
+            <p>Parents and working couples who want a clean home but don't have the time or energy to maintain it themselves.</p>
+          </div>
+        </article>
+        <article class="market-item">
+          <div class="market-icon">💼</div>
+          <div>
+            <h4>Working Professionals & Expats</h4>
+            <p>People who expect high standards and need a reliable service they can count on week after week.</p>
+          </div>
+        </article>
+        <article class="market-item">
+          <div class="market-icon">🏠</div>
+          <div>
+            <h4>Rental Property Landlords</h4>
+            <p>Landlords who need professional cleaning between tenants to minimise vacancy time and protect their property value.</p>
+          </div>
+        </article>
+        <article class="market-item">
+          <div class="market-icon">🏢</div>
+          <div>
+            <h4>Small Offices & Businesses</h4>
+            <p>Companies that want a clean, professional environment for their staff and clients without managing it internally.</p>
+          </div>
+        </article>
+        <article class="market-item">
+          <div class="market-icon">👴</div>
+          <div>
+            <h4>Elderly & Mobility-Limited Individuals</h4>
+            <p>People who physically cannot manage cleaning on their own — a group we're especially proud to support.</p>
+          </div>
+        </article>
+        <article class="market-item">
+          <div class="market-icon">🎉</div>
+          <div>
+            <h4>Post-Event Cleanup</h4>
+            <p>After parties, funerals, or gatherings — we restore your home or venue quickly and thoroughly.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-soft">
+    <div class="container" style="text-align:center;">
+      <p class="section-label">Get Started</p>
+      <h2 class="section-heading">Ready to Experience <span>Golden Broom?</span></h2>
+      <hr class="divider divider-center">
+      <p style="color:var(--grey); margin-bottom:36px; font-size:17px;">Book your first clean today — we respond within 24 hours.</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="contact.html" class="btn btn-gold">Book a Cleaning</a>
+        <a href="https://wa.me/233596613521" class="btn btn-outline" target="_blank"><img class="wa-ico" src="images/whatsapp-logo.webp" alt="" width="22" height="22"> WhatsApp Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  </main>
+<footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <section class="footer-brand">
+          <p class="logo-text">🧹 Golden Broom</p>
+          <p>Professional, eco-friendly home cleaning and services for Koforidua and the Eastern Region.</p>
+        </section>
+        <section class="footer-col">
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a>
+    <a href="portal.html#login">Login / Book</a></li>
+          </ul>
+        </section>
+        <section class="footer-col">
+          <h4>Contact</h4>
+          <p>📞 <a href="tel:0596613521" style="color:var(--grey);">0596 613 521</a></p>
+          <p><img class="wa-ico" src="images/whatsapp-logo.webp" alt="" width="22" height="22"> <a href="https://wa.me/233596613521" target="_blank" style="color:var(--grey);">WhatsApp Us</a></p>
+          <p>📍 Koforidua, Eastern Region</p>
+          <p>🕐 Mon – Sat: 7am – 6pm</p>
+        </section>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Golden Broom. All rights reserved.</p>
+        <p style="color:var(--gold); font-size:13px;">Clean Spaces. Green Choices. Healthy Homes.</p>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/233596613521" class="wa-float" target="_blank" title="Chat on WhatsApp"><img class="wa-ico" src="images/whatsapp-logo.webp" alt="" width="22" height="22"></a>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
